@@ -9,25 +9,26 @@ use Tests\TestCase;
 class ProjectTest extends TestCase
 {
 
-    use WithFaker;
+    use WithFaker, RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    /** @test */
+    public function a_user_can_create_a_project()
     {
-//        $this->expectError();
+        //        $this->expectError();
         $this->withoutExceptionHandling();
+
 
         $attributes = ['title' => $this->faker->title, 'description' => $this->faker->sentence];
 
-        $response = $this->post('/project',$attributes);
+        $this->post('/projects', $attributes)->assertRedirect('/projects');
 
-        $this->assertDatabaseHas('projects',$attributes);
+        $this->assertDatabaseHas('projects', $attributes);
+
+        $this->get('/projects')->assertSee($attributes['title']);
 
 
-//        $response->assertStatus(201);
+
+
+        //        $response->assertStatus(201);
     }
 }
