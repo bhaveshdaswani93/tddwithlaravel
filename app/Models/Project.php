@@ -9,5 +9,24 @@ class Project extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'owner_id' => 'integer',
+    ];
+
     protected $guarded = [];
+
+    public function path()
+    {
+        return "/projects/" . $this->id;
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
