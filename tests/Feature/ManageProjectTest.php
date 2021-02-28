@@ -36,8 +36,9 @@ class ManageProjectTest extends TestCase
         //        $this->expectError();
         $this->withoutExceptionHandling();
 
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        // $user = User::factory()->create();
+        // $this->actingAs($user);
+        $this->signIn();
         $this->get('projects/create')->assertStatus(200);
         // $attributes = ['title' => $this->faker->title, 'description' => $this->faker->sentence];
         $attributes = Project::factory()->raw();
@@ -67,7 +68,8 @@ class ManageProjectTest extends TestCase
     /** @test */
     public function a_project_requires_a_title()
     {
-        $this->actingAs(User::factory()->create());
+        // $this->actingAs(User::factory()->create());
+        $this->signIn();
         $attributes = Project::factory()->raw(['title' => '']);
         // dd($attributes);
         $this->post('/projects', $attributes)->assertSessionHasErrors(['title']);
@@ -76,7 +78,8 @@ class ManageProjectTest extends TestCase
     /** @test */
     public function a_project_requires_a_description()
     {
-        $this->actingAs(User::factory()->create());
+        // $this->actingAs(User::factory()->create());
+        $this->signIn();
         $attributes = Project::factory()->raw(['description' => '']);
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
     }
@@ -86,7 +89,8 @@ class ManageProjectTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->actingAs(User::factory()->create());
+        // $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         $project = Project::factory()->create(['owner_id' => auth()->id()]);
 
@@ -97,7 +101,8 @@ class ManageProjectTest extends TestCase
     /** @test */
     public function an_authenticated_user_cannot_view_the_projects_of_others()
     {
-        $this->actingAs(User::factory()->create());
+        // $this->actingAs(User::factory()->create());
+        $this->signIn();
         $project = Project::factory()->create();
         $this->get($project->path())->assertStatus(403);
     }
